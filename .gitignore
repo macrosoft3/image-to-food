@@ -242,5 +242,5 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Prettier
-.prettierrc
+# YOLO
+*.pt
