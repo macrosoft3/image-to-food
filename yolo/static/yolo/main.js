@@ -1,147 +1,99 @@
-const config = {
-  constraints: {
-    audio: false,
-    video: { width: 1280, height: 720 },
-  },
-  delay: 10000,
-  url: "/yolo/camera/",
-};
+(() => {
+  const width = 320;
+  let height = 0;
 
-const elements = {
-  alert: null,
-  detect: null,
-  load: null,
-  place: null,
-  result: null,
-  video: null,
-};
+  let streaming = false;
 
-const ui = {
-  showButton(disabled) {
-    elements.detect.disabled = disabled;
-  },
-  showLoading(visible) {
-    elements.load.classList.toggle("d-none", !visible);
-  },
-  showError(text) {
-    elements.alert.textContent = text;
-    elements.alert.classList.remove("d-none");
-    setTimeout(() => {
-      elements.alert.classList.add("d-none");
-    }, config.delay);
-  },
-  showResult(src) {
-    if (elements.place) {
-      elements.place.classList.add("d-none");
+  let video = null;
+  let canvas = null;
+  let photo = null;
+  let startbutton = null;
+
+  function showViewLiveResultButton() {
+    if (window.self !== window.top) {
+      document.querySelector(".contentarea").remove();
+      const button = document.createElement("button");
+      button.textContent = "View live result of the example code above";
+      document.body.append(button);
+      button.addEventListener("click", () => window.open(location.href));
+      return true;
     }
-
-    elements.result.src = src;
-    elements.result.classList.remove("d-none");
+    return false;
   }
-};
 
-const camera = {
-  captureFrame() {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = elements.video.videoWidth;
-    canvas.height = elements.video.videoHeight;
-    ctx.drawImage(elements.video, 0, 0);
-
-    return canvas.toDataURL();
-  },
-  async getMedia(constraints) {
-    let stream = null;
-
-    try {
-      stream = await navigator.mediaDevices.getUserMedia(constraints);
-      return stream;
-    } catch (error) {
-      console.error(`${error.name}: ${error.message}`);
-      throw error;
+  function startup() {
+    if (showViewLiveResultButton()) {
+      return;
     }
-  }
-};
+    video = document.getElementById("video");
+    canvas = document.getElementById("canvas");
+    photo = document.getElementById("photo");
+    startbutton = document.getElementById("startbutton");
 
-const api = {
-  getCSRFToken() {
-    return document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("csrftoken="))
-      ?.split("=")[1];
-  },
-  async postData(url, data) {
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": this.getCSRFToken(),
-        },
-        body: JSON.stringify({ image: data }),
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: false })
+      .then((stream) => {
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch((err) => {
+        console.error(`An error occurred: ${err}`);
       });
-      if (!response.ok) {
-        throw new Error(`レスポンスステータス: ${response.status}`);
-      }
 
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error(`${error.name}: ${error.message}`);
-      throw error;
-    }
-  },
-};
+    video.addEventListener(
+      "canplay",
+      (ev) => {
+        if (!streaming) {
+          height = video.videoHeight / (video.videoWidth / width);
 
-const app = {
-  addEventListeners() {
-    elements.detect.addEventListener("click", () => this.foodDetection());
-  },
-  getElements() {
-    elements.alert = document.getElementById("alert");
-    elements.detect = document.getElementById("detect");
-    elements.load = document.getElementById("loading");
-    elements.place = document.getElementById("placeholder");
-    elements.result = document.getElementById("result");
-    elements.video = document.getElementById("video");
-  },
-  async foodDetection() {
-    ui.showButton(true);
-    ui.showLoading(true);
-    try {
-      const image = camera.captureFrame();
-      const result = await api.postData(config.url, image);
-      ui.showResult(result);
-    } catch (error) {
-      ui.showError(`${error.name}: ${error.message}`);
-      console.error(`${error.name}: ${error.message}`);
-    } finally {
-      ui.showButton(false);
-      ui.showLoading(false);
-    }
-  },
-  async initialize() {
-    let stream = null;
+          if (isNaN(height)) {
+            height = width / (4 / 3);
+          }
 
-    try {
-      stream = await camera.getMedia(config.constraints);
-      this.addEventListeners();
-      elements.video.srcObject = stream;
-    } catch (error) {
-      ui.showError(`${error.name}: ${error.message}`);
-      console.error(`${error.name}: ${error.message}`);
-      throw error;
+          video.setAttribute("width", width);
+          video.setAttribute("height", height);
+          canvas.setAttribute("width", width);
+          canvas.setAttribute("height", height);
+          streaming = true;
+        }
+      },
+      false,
+    );
+
+    startbutton.addEventListener(
+      "click",
+      (ev) => {
+        takepicture();
+        ev.preventDefault();
+      },
+      false,
+    );
+
+    clearphoto();
+  }
+
+  function clearphoto() {
+    const context = canvas.getContext("2d");
+    context.fillStyle = "#AAA";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    const data = canvas.toDataURL("image/png");
+    photo.setAttribute("src", data);
+  }
+
+  function takepicture() {
+    const context = canvas.getContext("2d");
+    if (width && height) {
+      canvas.width = width;
+      canvas.height = height;
+      context.drawImage(video, 0, 0, width, height);
+
+      const data = canvas.toDataURL("image/png");
+      photo.setAttribute("src", data);
+    } else {
+      clearphoto();
     }
   }
-};
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
-    app.getElements();
-    app.initialize();
-  });
-} else {
-  app.getElements();
-  app.initialize();
-}
+  window.addEventListener("load", startup, false);
+})();

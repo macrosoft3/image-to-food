@@ -4,17 +4,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="食材の写真から認識して、作れる料理やレシピを提案するWebアプリ。スマホやPCのカメラから直接撮影して解析します。" />
-    <meta name="author" content="So Masuda" />
     <title>Image to Food</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     {% load static %}
     <link rel="stylesheet" href="{% static 'yolo/style.css' %}" />
 </head>
 
 <body>
-
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <symbol id="arrow-right" viewBox="0 0 16 16">
             <path fill-rule="evenodd"
@@ -224,19 +221,12 @@
                         <p>
                             スマホやPCのカメラで食材を撮影すると、AIが自動で認識。冷蔵庫にある材料で今すぐ作れる料理を瞬時に提案します。献立に迷ったとき、食材を無駄にしたくないとき、手軽に使える料理アシスタントです。
                         </p>
-                        <div class="p-4 border rounded-3 mb-4 flex-fill">
-                            <div class="mb-4">
-                                <video id="video" class="w-100 object-fit-cover border rounded" autoplay muted
-                                    playsinline></video>
-                            </div>
-                            <div id="alert" class="alert alert-danger d-none" role="alert"></div>
-                            <div id="loading" class="spinner-border d-none" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button id="detect" class="btn btn-primary" type="button">
-                                    📸 今すぐ試してみる
-                                </button>
+                        <div
+                            class="p-4 border rounded-3 mb-4 d-flex justify-content-center align-items-center flex-fill">
+                            <div class="camera">
+                                <video id="video" class="object-fit-cover border rounded" autoplay muted playsinline>
+                                    Video stream not available.
+                                </video>
                             </div>
                         </div>
                     </div>
@@ -245,11 +235,16 @@
                         <p>
                             認識した食材を元に、作れる料理を自動提案。レシピサイトを検索する手間も、材料リストを打ち込む面倒もありません。冷蔵庫の整理や買い物前の在庫確認にも便利です。
                         </p>
-                        <div class="p-4 border rounded-3 mb-4 flex-fill">
-                            <div id="placeholder" class="text-secondary py-3 text-center">
+                        <div
+                            class="p-4 border rounded-3 mb-4 d-flex justify-content-center align-items-center flex-fill">
+                            <div id="placeholder" class="text-secondary py-3">
                                 <p class="mb-0">ここに検出結果が表示されます</p>
                             </div>
-                            <img id="result" class="d-none" src="" alt="物体検出器の出力" />
+                            <div class="output">
+                                <img id="photo" class="object-fit-cover border rounded d-none"
+                                    alt="The screen capture will appear in this box."
+                                    src="data:image/png;base64,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">
+                            </div>
                         </div>
                     </div>
                 </div>
