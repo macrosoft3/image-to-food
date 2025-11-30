@@ -1,4 +1,5 @@
 django
+google-genai
 pillow
 pytorch
 torchvision
