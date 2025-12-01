@@ -15,18 +15,22 @@
   // will be set by the startup() function.
 
   var video = null;
+  var input = null;
   var canvas = null;
   var photo = null;
   var name = null;
   var recipe = null;
+  var filebutton = null;
   var startbutton = null;
 
   function startup() {
     video = document.getElementById('video');
+    input = document.getElementById('input');
     canvas = document.getElementById('canvas');
     photo = document.getElementById('photo');
     name = document.getElementById('name');
     recipe = document.getElementById('recipe');
+    filebutton = document.getElementById('filebutton');
     startbutton = document.getElementById('startbutton');
 
     navigator.mediaDevices.getUserMedia({ video: true, audio: false })
@@ -57,12 +61,63 @@
       }
     }, false);
 
+    filebutton.addEventListener(
+      "click",
+      (e) => {
+        if (input) {
+          input.click();
+        }
+        e.preventDefault(); // "#" への移動を防ぐ
+      },
+      false,
+    );
+
     startbutton.addEventListener('click', function (ev) {
       takepicture();
       ev.preventDefault();
     }, false);
 
+    input.addEventListener("change", handleFiles, false);
+
     clearphoto();
+  }
+
+  function handleFiles() {
+    if (!this.files.length) {
+      console.log("ファイルが選択されていません。");
+    } else {
+      const image = new Image();
+      const file = this.files[0];
+
+      image.onload = () => {
+        var context = canvas.getContext('2d');
+        if (width && height) {
+          canvas.width = width;
+          canvas.height = height;
+          context.drawImage(image, 0, 0, width, height);
+
+          var data = canvas.toDataURL('image/png');
+          photo.setAttribute('src', data);
+
+          canvas.toBlob(
+            async (blob) => {
+              const formData = new FormData();
+              formData.append("user-pic", blob);
+
+              var data = await sendData(formData);
+              photo.setAttribute('src', data.URI);
+              name.textContent = data.recipe.recipe_name;
+              recipe.textContent = data.recipe.instructions;
+            },
+            'image/png'
+          );
+        } else {
+          clearphoto();
+        }
+      };
+
+      image.src = URL.createObjectURL(file);
+    }
   }
 
   // Fill the photo with an indication that none has been
@@ -132,6 +187,7 @@
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { 'X-CSRFToken': csrftoken },
+        mode: 'same-origin', // Do not send CSRF token to another domain.
         // FormData インスタンスをリクエスト本体として設定
         body: formdata,
       });
