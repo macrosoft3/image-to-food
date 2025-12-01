@@ -10,6 +10,7 @@
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link href="{% static 'docs.css' %}" rel="stylesheet">
     <link href="{% static 'main.css' %}" rel="stylesheet">
+    <link rel="icon" href="{% static 'braces.svg' %}">
 </head>
 
 <body>
@@ -117,14 +118,15 @@
                     <a class="d-flex flex-column flex-lg-row justify-content-center align-items-center mb-4 text-dark lh-sm text-decoration-none"
                         href="https://github.com/macrosoft3/image-to-food/commits/main/">
                         <strong
-                            class="d-sm-inline-block p-2 me-2 mb-2 mb-lg-0 rounded-3 masthead-notice">v5.3の新機能</strong>
-                        <span class="text-body-secondary">カラーモード対応、カラーパレットの拡張などなど!</span>
+                            class="d-sm-inline-block p-2 me-2 mb-2 mb-lg-0 rounded-3 masthead-notice">v1.0の新機能</strong>
+                        <span class="text-body-secondary">カメラ対応などなど!</span>
                     </a>
                     <h1 class="mb-3 fw-semibold lh-1">
-                        Image-to-Foodで<br />料理を調理しよう
+                        Image-to-Foodで<br />料理を始めよう
                     </h1>
                     <p class="lead mb-4">
-                        この例では、内蔵ウェブカメラを使用してメディアストリームを設定し、そのストリームから画像を取得し、その画像を使用して料理を調理する方法を示します。
+                        image-to-foodでは、navigator.mediaDevices.getUserMedia() を使用して、 getUserMedia()
+                        に対応しているコンピューターや携帯電話のカメラにアクセスします。
                     </p>
                 </div>
             </div>
@@ -132,15 +134,17 @@
         <div class="container-xxl bd-gutter masthead-followup">
             <section class="row g-3 g-md-5 mb-5 pb-5 justify-content-center">
                 <div class="col-lg-6 py-lg-4 pe-lg-5">
-                    <svg class="bi mb-2 fs-2 text-body-secondary">
-                        <use xlink:href="#box-seam"></use>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi mb-2 fs-2 text-body-secondary" viewBox="0 0 16 16">
+                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                        <path
+                            d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z" />
                     </svg>
-                    <h3 class="fw-semibold">
-                        パッケージマネージャ経由でインストールする
-                    </h3>
+                    <h3 class="fw-semibold">フレームをキャプチャ</h3>
                     <p class="pe-lg-5">
-                        BootstrapのソースSassとJavaScriptファイルをnpm、RubyGems、Composer、またはMeteorでインストールします。パッケージ管理されたインストールには、ドキュメントや完全なビルドスクリプトは含まれません。また、<a
-                            href="https://github.com/twbs/bootstrap-npm-starter">npmテンプレートレポジトリを使用して</a>、npm経由でBootstrapプロジェクトを素早く生成することができます。
+                        左側の最初のパネルには 2 つの構成要素があります。 <code>&lt;video&gt;</code> 要素は
+                        navigator.mediaDevices.getUserMedia() からストリームを受け取り、 <code>&lt;button&gt;</code>
+                        はユーザーがクリックすることで、映像のフレームをキャプチャすることができるものです。
                     </p>
                     <div class="d-flex flex-column align-items-center mb-3 camera">
                         <video class="border rounded-3 mb-3" id="video">Video stream not available.</video>
@@ -150,22 +154,20 @@
                         </div>
                     </div>
                     <canvas id="canvas"></canvas>
-                    <p>
-                        より詳細な情報と追加のパッケージマネージャーについては、<a
-                            href="https://getbootstrap.jp/docs/5.3/getting-started/download/">インストールドキュメントをお読みください。</a>
-                    </p>
+                    <p>より詳細な情報と追加のパッケージマネージャーについては、<a
+                            href="https://github.com/macrosoft3/image-to-food">インストールドキュメントをお読みください。</a></p>
                 </div>
                 <div class="col-lg-6 py-lg-4 ps-lg-5 border-lg-start">
-                    <svg class="bi mb-2 fs-2 text-body-secondary">
-                        <use xlink:href="#globe2"></use>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi mb-2 fs-2 text-body-secondary" viewBox="0 0 16 16">
+                        <path
+                            d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27m.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0z" />
+                        <path
+                            d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5" />
                     </svg>
-                    <h3 class="fw-semibold">CDN経由でインクルードする</h3>
+                    <h3 class="fw-semibold">物体の位置とクラスを識別</h3>
                     <p class="pe-lg-5">
-                        BootstrapでコンパイルされたCSSやJSを含めるだけなら、<a
-                            href="https://www.jsdelivr.com/package/npm/bootstrap">jsDelivr</a>を使用することができます。<a
-                            href="https://getbootstrap.jp/docs/5.3/getting-started/introduction/#quick-start">クイックスタート</a>で実際に使ってみたり、<a
-                            href="https://getbootstrap.jp/docs/5.3/examples/">サンプル</a>を見て次のプロジェクトをスタートさせましょう。また、Popperと私たちのJSを<a
-                            href="https://getbootstrap.jp/docs/5.3/getting-started/introduction/#separate">別々</a>に含めることも可能です。
+                        物体検出器の出力は、画像内のオブジェクトを囲むバウンディングボックスのセットであり、クラスラベルと各ボックスの信頼度スコアとともに提供されます。物体検出は、シーン内で関心のあるオブジェクトを識別する必要があるが、オブジェクトが正確にどこにあるか、またはその正確な形状を知る必要がない場合に適しています。
                     </p>
                     <div class="d-flex flex-column align-items-center mb-3 output">
                         <img class="border rounded-3 mb-3" id="photo" alt="The screen capture will appear in this box.">
