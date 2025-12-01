@@ -1,10 +1,11 @@
-import asyncio
 import base64
 import io
 from typing import List, Optional
 
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_protect
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
@@ -34,7 +35,9 @@ model = YOLO("yolov8x-oiv7.pt")
 
 
 # Create your views here.
-async def YOLO_view(request):
+@cache_page(60 * 15)
+@csrf_protect
+def YOLO_view(request):
     try:
         # Do some work
         file = request.FILES["user-pic"]
@@ -54,7 +57,7 @@ async def YOLO_view(request):
 
         buffer = io.BytesIO()
         plot = Image.fromarray(plot[:, :, ::-1])
-        plot.save(buffer, format="PNG")
+        plot.save(buffer, "PNG", optimize=True, quality=80)
         data = base64.b64encode(buffer.getvalue())
         data = data.decode()
 
@@ -79,6 +82,6 @@ async def YOLO_view(request):
             "recipe": recipe.model_dump(),
         }
         return JsonResponse(response)
-    except asyncio.CancelledError:
+    except Exception:
         # Handle disconnect
         raise
