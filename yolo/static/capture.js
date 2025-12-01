@@ -17,12 +17,16 @@
   var video = null;
   var canvas = null;
   var photo = null;
+  var name = null;
+  var recipe = null;
   var startbutton = null;
 
   function startup() {
     video = document.getElementById('video');
     canvas = document.getElementById('canvas');
     photo = document.getElementById('photo');
+    name = document.getElementById('name');
+    recipe = document.getElementById('recipe');
     startbutton = document.getElementById('startbutton');
 
     navigator.mediaDevices.getUserMedia({ video: true, audio: false })
@@ -96,6 +100,8 @@
 
           var data = await sendData(formData);
           photo.setAttribute('src', data.URI);
+          name.textContent = data.recipe.recipe_name;
+          recipe.textContent = data.recipe.instructions;
         },
         'image/png'
       );
