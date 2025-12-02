@@ -2,6 +2,7 @@ django
 google-genai
 pillow
 python-dotenv
-pytorch
+# pytorch
+torch
 torchvision
 ultralytics
