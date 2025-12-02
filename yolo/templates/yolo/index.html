@@ -149,8 +149,8 @@
                     <div class="d-flex flex-column align-items-center mb-3 camera">
                         <video class="border rounded-3 mb-3" id="video">Video stream not available.</video>
                         <div class="d-flex flex-row grid gap-3">
-                            <button id="filebutton">Upload photo</button>
-                            <button id="startbutton">Take photo</button>
+                            <button id="button-file">Upload photo</button>
+                            <button id="button-start">Take photo</button>
                         </div>
                     </div>
                     <input type="file" class="d-none" id="input" accept="image/*" />
@@ -176,7 +176,15 @@
                 </div>
                 <div class="col-md-8 mx-auto text-center">
                     <h4 class="fw-semibold" id="name"></h4>
-                    <p id="recipe"></p>
+                    <div>
+                        <ul class="list-group" id="recipe">
+                            <!-- <li class="list-group-item">An item</li>
+                            <li class="list-group-item">A second item</li>
+                            <li class="list-group-item">A third item</li>
+                            <li class="list-group-item">A fourth item</li>
+                            <li class="list-group-item">And a fifth one</li> -->
+                        </ul>
+                    </div>
                     <div class="d-flex flex-wrap align-items-center justify-content-center gap-4 mt-4">
                         <!-- <a class="d-flex flex-column align-items-center text-decoration-none animate-img"
                             href="https://getbootstrap.jp/docs/5.3/getting-started/webpack">
