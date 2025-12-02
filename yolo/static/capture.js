@@ -77,12 +77,62 @@
       ev.preventDefault();
     }, false);
 
-    input.addEventListener("change", handleFiles, false);
+    input.addEventListener("change", handleFile, false);
 
     clearPhoto();
   }
 
-  function handleFiles() {
+  function contextDrawImage(image) {
+    var context = canvas.getContext("2d");
+    if (width && height) {
+      canvas.width = width;
+      canvas.height = height;
+      context.drawImage(image, 0, 0, width, height);
+
+      photoSetAttribute();
+
+      canvasToBlob();
+    } else {
+      clearPhoto();
+    }
+  }
+
+  function photoSetAttribute() {
+    var data = canvas.toDataURL("image/png");
+    photo.setAttribute("src", data);
+  }
+
+  function canvasToBlob() {
+    canvas.toBlob(
+      async (blob) => {
+        const formData = new FormData();
+        formData.append("user-pic", blob);
+
+        var data = await sendData(formData);
+        photo.setAttribute("src", data.URI);
+        elementTextContent(name, data.recipe.recipe_name);
+        elementTextContent(recipe, data.recipe.instructions);
+      },
+      "image/png"
+    );
+  }
+
+  function elementTextContent(element, data) {
+    if (typeof data === "string") {
+      element.textContent = data;
+    }
+
+    if (Array.isArray(data)) {
+      data.forEach((datum) => {
+        const li = document.createElement("li");
+        li.setAttribute("class", "list-group-item");
+        li.textContent = datum;
+        element.appendChild(li);
+      });
+    }
+  }
+
+  function handleFile() {
     if (!this.files.length) {
       console.log("ファイルが選択されていません。");
     } else {
@@ -90,30 +140,7 @@
       const file = this.files[0];
 
       image.onload = () => {
-        var context = canvas.getContext("2d");
-        if (width && height) {
-          canvas.width = width;
-          canvas.height = height;
-          context.drawImage(image, 0, 0, width, height);
-
-          var data = canvas.toDataURL("image/png");
-          photo.setAttribute("src", data);
-
-          canvas.toBlob(
-            async (blob) => {
-              const formData = new FormData();
-              formData.append("user-pic", blob);
-
-              var data = await sendData(formData);
-              photo.setAttribute("src", data.URI);
-              name.textContent = data.recipe.recipe_name;
-              recipe.textContent = data.recipe.instructions;
-            },
-            "image/png"
-          );
-        } else {
-          clearPhoto();
-        }
+        contextDrawImage(image);
       };
 
       image.src = URL.createObjectURL(file);
@@ -139,30 +166,7 @@
   // other changes before drawing it.
 
   function takePicture() {
-    var context = canvas.getContext("2d");
-    if (width && height) {
-      canvas.width = width;
-      canvas.height = height;
-      context.drawImage(video, 0, 0, width, height);
-
-      var data = canvas.toDataURL("image/png");
-      photo.setAttribute("src", data);
-
-      canvas.toBlob(
-        async (blob) => {
-          const formData = new FormData();
-          formData.append("user-pic", blob);
-
-          var data = await sendData(formData);
-          photo.setAttribute("src", data.URI);
-          name.textContent = data.recipe.recipe_name;
-          recipe.textContent = data.recipe.instructions;
-        },
-        "image/png"
-      );
-    } else {
-      clearPhoto();
-    }
+    contextDrawImage(video);
   }
 
   function getCookie(name) {
