@@ -68,7 +68,7 @@ def YOLO_view(request):
                 labels,
             ],
             config=types.GenerateContentConfig(
-                system_instruction="You are a chef.",
+                system_instruction=["You are a chef.", "Respond in Japanese."],
                 response_mime_type="application/json",
                 response_json_schema=Recipe.model_json_schema(),
             ),
