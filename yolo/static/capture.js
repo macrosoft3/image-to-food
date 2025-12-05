@@ -38,11 +38,11 @@
         video.srcObject = stream;
         video.play();
       })
-      .catch(function (err) {
-        console.log("An error occurred: " + err);
+      .catch(function (error) {
+        console.log("An error occurred: " + error);
       });
 
-    video.addEventListener("canplay", function (ev) {
+    video.addEventListener("canplay", function (event) {
       if (!streaming) {
         height = video.videoHeight / (video.videoWidth / width);
 
@@ -63,23 +63,37 @@
 
     fileButton.addEventListener(
       "click",
-      (e) => {
+      (event) => {
+        clearPhoto();
+        name.textContent = "";
+        recipe.textContent = "";
+
         if (input) {
           input.click();
         }
-        e.preventDefault(); // "#" への移動を防ぐ
+        event.preventDefault(); // "#" への移動を防ぐ
       },
-      false,
+      false
     );
 
-    startButton.addEventListener("click", function (ev) {
-      takePicture();
-      ev.preventDefault();
-    }, false);
+    startButton.addEventListener(
+      "click",
+      (event) => {
+        clearPhoto();
+        name.textContent = "";
+        recipe.textContent = "";
+
+        takePicture();
+        event.preventDefault();
+      },
+      false
+    );
 
     input.addEventListener("change", handleFile, false);
 
     clearPhoto();
+    name.textContent = "";
+    recipe.textContent = "";
   }
 
   function contextDrawImage(image) {
@@ -201,9 +215,9 @@
       const result = await response.json();
       console.log(result);
       return result;
-    } catch (e) {
-      console.error(e);
-      throw e;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   }
 
